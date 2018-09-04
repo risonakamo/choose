@@ -1,4 +1,4 @@
-import {WdMain} from "./wdmain";
+import {WdMain} from "./wdmain.js";
 
 window.onload=main;
 
