@@ -1,0 +1,34 @@
+@charset "UTF-8";
+body {
+  margin: 0;
+  background-color: #181818;
+  color: white;
+  font-family: "roboto";
+}
+.wrap {
+  display: flex;
+  padding-top: 20%;
+  flex-direction: column;
+  align-items: center;
+}
+.title {
+  min-width: 110px;
+  font-size: 28px;
+  text-align: center;
+  padding: 0 15px 0 15px;
+  border-left: 5px solid white;
+  border-right: 5px solid white;
+  outline: none;
+}
+.choice {
+  font-size: 20px;
+  padding: 4px 0 4px 0;
+}
+.choice > span {
+  padding-right: 10px;
+}
+.choice .input {
+  display: inline-block;
+  outline: none;
+  text-align: center;
+}
