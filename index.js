@@ -1,3 +1,5 @@
+import {WdMain} from "./wdmain";
+
 window.onload=main;
 
 function main()

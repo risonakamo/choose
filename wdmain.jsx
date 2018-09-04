@@ -1,5 +1,5 @@
 //WhatDo main
-class WdMain extends React.Component
+export class WdMain extends React.Component
 {
     render()
     {
