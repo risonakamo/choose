@@ -1,3 +1,5 @@
+import {cursorEnd} from "./index.js";
+
 //WhatDo main
 export class WdMain extends React.Component
 {
@@ -58,8 +60,9 @@ export class WdMain extends React.Component
       }
     }
 
-    else if (e.key=="Backspace" && isEmpty)
+    else if (e.key=="Backspace" && window.getSelection().anchorOffset==0 && cid>0)
     {
+      e.preventDefault();
       this.deleteChoice(cid);
     }
   }
@@ -110,6 +113,7 @@ class Choice extends React.Component
   focus()
   {
     this.maininput.current.focus();
+    cursorEnd();
   }
 
   //disallow creation of another choice if
