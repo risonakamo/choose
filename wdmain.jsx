@@ -26,6 +26,22 @@ export class WdMain extends React.Component
     this.setState({choices:this.state.choices});
   }
 
+  //delete the given choice ID
+  deleteChoice(cid)
+  {
+    delete this.choiceRefs[cid];
+
+    var index=this.state.choices.indexOf(cid);
+    this.state.choices.splice(index,1);
+
+    if (index!=0)
+    {
+      this.choiceRefs[this.state.choices[index-1]].focus();
+    }
+
+    this.setState({choices:this.state.choices});
+  }
+
   //main key handler for choices and title bar.
   //but also needs cid.
   //give isEmpty as result of checkempty, whether or not
@@ -44,7 +60,7 @@ export class WdMain extends React.Component
 
     else if (e.key=="Backspace" && isEmpty)
     {
-      console.log("delete");
+      this.deleteChoice(cid);
     }
   }
 
@@ -63,7 +79,7 @@ export class WdMain extends React.Component
       {this.state.choices.map((x,i)=>{
         return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}
           ref={(ref)=>{
-            if (!this.choiceRefs[x])
+            if (!this.choiceRefs[x] && ref)
             {
               this.choiceRefs[x]=ref;
               ref.focus();
