@@ -26,7 +26,7 @@ export class WdMain extends React.Component
     this.setState({choices:this.state.choices});
   }
 
-  //main key handler.
+  //main key handler for choices and title bar.
   //but also needs cid.
   //give isEmpty as result of checkempty, whether or not
   //the choice textbox is empty.
