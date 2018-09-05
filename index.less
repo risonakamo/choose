@@ -46,3 +46,22 @@ body
         text-align: center;
     }
 }
+
+.ender
+{
+    opacity: 0;
+    font-size: 14px;
+    padding-top: 5px;
+    transition: opacity .2s;
+
+    &.show
+    {
+        opacity: .3;
+    }
+}
+
+::selection
+{
+    background-color: white;
+    color: #181818;
+}

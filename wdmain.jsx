@@ -8,6 +8,7 @@ export class WdMain extends React.Component
     super(props);
     this.addChoice=this.addChoice.bind(this);
     this.mainKeys=this.mainKeys.bind(this);
+    this.deleteChoice=this.deleteChoice.bind(this);
 
     this.state={
       choices:[] //choice IDs in order
@@ -16,6 +17,11 @@ export class WdMain extends React.Component
     this.titleRef=React.createRef(); //the top most title block ref
     this.choicesId=0; //the last used choice id
     this.choiceRefs={}; //refs of choices with cid as key
+  }
+
+  componentDidMount()
+  {
+    this.titleRef.current.focus();
   }
 
   //give it key to insert after
@@ -76,6 +82,12 @@ export class WdMain extends React.Component
 
   render()
   {
+    var enderShow="";
+    if (this.state.choices.length>=2)
+    {
+      enderShow="show";
+    }
+
     return (<>
       <div className="title"
         contentEditable=""
@@ -83,9 +95,7 @@ export class WdMain extends React.Component
           this.mainKeys(e,0);
         }}
         ref={this.titleRef}
-      >
-        どうしよう
-      </div>
+      ></div>
 
       {this.state.choices.map((x,i)=>{
         return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}
@@ -97,6 +107,8 @@ export class WdMain extends React.Component
             }
           }}/>;
       })}
+
+      <div className={`ender ${enderShow}`}><i>Ctrl+Enter to Choose</i></div>
     </>);
   }
 }

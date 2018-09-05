@@ -32,3 +32,16 @@ body {
   outline: none;
   text-align: center;
 }
+.ender {
+  opacity: 0;
+  font-size: 14px;
+  padding-top: 5px;
+  transition: opacity 0.2s;
+}
+.ender.show {
+  opacity: 0.3;
+}
+::selection {
+  background-color: white;
+  color: #181818;
+}
