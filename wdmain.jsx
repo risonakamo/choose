@@ -1,4 +1,4 @@
-import {cursorEnd,isStartSelection} from "./index.js";
+import {cursorEnd,isStartSelection,isEndSelection} from "./index.js";
 
 //WhatDo main
 export class WdMain extends React.Component
@@ -84,6 +84,32 @@ export class WdMain extends React.Component
     {
       e.preventDefault();
       this.deleteChoice(cid);
+    }
+
+    else if (e.key=="ArrowUp")
+    {
+      if (isStartSelection())
+      {
+        var focusindex=this.state.choices.indexOf(cid)-1;
+
+        if (focusindex<0)
+        {
+          this.titleRef.current.focus();
+        }
+
+        else
+        {
+          this.choiceRefs[this.state.choices[focusindex]].focus();
+        }
+      }
+    }
+
+    else if (e.key=="ArrowDown")
+    {
+      if (isEndSelection())
+      {
+        this.choiceRefs[this.state.choices[this.state.choices.indexOf(cid)+1]].focus();
+      }
     }
   }
 

@@ -32,3 +32,14 @@ export function isStartSelection()
 
     return false;
 }
+
+//return true if end of a selection or not a text node
+export function isEndSelection()
+{
+    if (!_selection.anchorNode.data || _selection.anchorOffset==_selection.anchorNode.data.length)
+    {
+        return true;
+    }
+
+    return false;
+}
