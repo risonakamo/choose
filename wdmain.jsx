@@ -13,8 +13,9 @@ export class WdMain extends React.Component
       choices:[] //choice IDs in order
     };
 
+    this.titleRef=React.createRef(); //the top most title block ref
     this.choicesId=0; //the last used choice id
-    this.choiceRefs={};
+    this.choiceRefs={}; //refs of choices with cid as key
   }
 
   //give it key to insert after
@@ -39,6 +40,12 @@ export class WdMain extends React.Component
     if (index!=0)
     {
       this.choiceRefs[this.state.choices[index-1]].focus();
+    }
+
+    else
+    {
+      this.titleRef.current.focus();
+      cursorEnd();
     }
 
     this.setState({choices:this.state.choices});
@@ -75,6 +82,7 @@ export class WdMain extends React.Component
         onKeyDown={(e)=>{
           this.mainKeys(e,0);
         }}
+        ref={this.titleRef}
       >
         どうしよう
       </div>
