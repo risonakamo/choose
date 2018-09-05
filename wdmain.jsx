@@ -12,6 +12,7 @@ export class WdMain extends React.Component
     };
 
     this.choicesId=0; //the last used choice id
+    this.choiceRefs={};
   }
 
   //give it key to insert after
@@ -27,12 +28,23 @@ export class WdMain extends React.Component
 
   //main key handler.
   //but also needs cid.
-  mainKeys(e,cid)
+  //give isEmpty as result of checkempty, whether or not
+  //the choice textbox is empty.
+  mainKeys(e,cid,isEmpty=false)
   {
     if (e.key=="Enter")
     {
       e.preventDefault();
-      this.addChoice(cid);
+
+      if (!isEmpty)
+      {
+        this.addChoice(cid);
+      }
+    }
+
+    else if (e.key=="Backspace" && isEmpty)
+    {
+      console.log("delete");
     }
   }
 
@@ -49,7 +61,14 @@ export class WdMain extends React.Component
       </div>
 
       {this.state.choices.map((x,i)=>{
-        return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}/>;
+        return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}
+          ref={(ref)=>{
+            if (!this.choiceRefs[x])
+            {
+              this.choiceRefs[x]=ref;
+              ref.focus();
+            }
+          }}/>;
       })}
     </>);
   }
@@ -62,6 +81,33 @@ export class WdMain extends React.Component
 //addChoice: function from parent
 class Choice extends React.Component
 {
+  constructor(props)
+  {
+    super(props);
+    this.focus=this.focus.bind(this);
+    this.checkEmpty=this.checkEmpty.bind(this);
+
+    this.maininput=React.createRef();
+  }
+
+  //focus on the main input
+  focus()
+  {
+    this.maininput.current.focus();
+  }
+
+  //disallow creation of another choice if
+  //this choice is empty
+  checkEmpty()
+  {
+    if (this.maininput.current.innerText=="")
+    {
+      return true;
+    }
+
+    return false;
+  }
+
   render()
   {
     return (
@@ -70,11 +116,10 @@ class Choice extends React.Component
         <div className="input"
           contentEditable=""
           onKeyDown={(e)=>{
-            this.props.mainKeys(e,this.props.cid);
+            this.props.mainKeys(e,this.props.cid,this.checkEmpty());
           }}
-        >
-          sample
-        </div>
+          ref={this.maininput}
+        ></div>
       </div>
     );
   }
