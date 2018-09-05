@@ -21,3 +21,14 @@ export function cursorEnd()
         _selection.addRange(_range);
     }
 }
+
+//returns true if at start of a selection
+export function isStartSelection()
+{
+    if (!_selection.anchorOffset)
+    {
+        return true;
+    }
+
+    return false;
+}

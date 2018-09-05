@@ -1,4 +1,4 @@
-import {cursorEnd} from "./index.js";
+import {cursorEnd,isStartSelection} from "./index.js";
 
 //WhatDo main
 export class WdMain extends React.Component
@@ -27,10 +27,17 @@ export class WdMain extends React.Component
   //give it key to insert after
   addChoice(insertAfter)
   {
+    var inc=1;
     this.choicesId++;
 
+    //if at start of selection, new choice will be added before the insertAfter
+    if (isStartSelection())
+    {
+      inc=0;
+    }
+
     //insert new id after the insertafter id
-    this.state.choices.splice(this.state.choices.indexOf(insertAfter)+1,0,this.choicesId);
+    this.state.choices.splice(this.state.choices.indexOf(insertAfter)+inc,0,this.choicesId);
 
     this.setState({choices:this.state.choices});
   }
