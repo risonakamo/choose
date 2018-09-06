@@ -1,4 +1,4 @@
-import {cursorEnd,isStartSelection,isEndSelection} from "./index.js";
+import {cursorEnd,isStartSelection,isEndSelection,randomO} from "./index.js";
 
 //WhatDo main
 export class WdMain extends React.Component

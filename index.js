@@ -43,3 +43,18 @@ export function isEndSelection()
 
     return false;
 }
+
+export function randomO(amount,callback)
+{
+    var r=new XMLHttpRequest();
+    r.open("GET",`https://www.random.org/integers/?num=1&min=1&max=${amount}&col=1&base=10&format=plain&rnd=new`);
+
+    r.onreadystatechange=()=>{
+        if (r.readyState==4)
+        {
+            callback(r.response);
+        }
+    };
+
+    r.send();
+}
