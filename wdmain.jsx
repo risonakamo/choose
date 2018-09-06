@@ -79,16 +79,15 @@ export class WdMain extends React.Component
     {
       e.preventDefault();
 
-      if (!isEmpty)
+      if (e.ctrlKey)
+      {
+        this.getOutput();
+      }
+
+      else if (!isEmpty)
       {
         this.addChoice(cid);
       }
-    }
-
-    else if (e.key=="Backspace" && window.getSelection().anchorOffset==0 && cid>0)
-    {
-      e.preventDefault();
-      this.deleteChoice(cid);
     }
 
     else if (e.key=="ArrowUp")
@@ -116,6 +115,12 @@ export class WdMain extends React.Component
         this.choiceRefs[this.state.choices[this.state.choices.indexOf(cid)+1]].focus();
       }
     }
+
+    else if (e.key=="Backspace" && window.getSelection().anchorOffset==0 && cid>0)
+    {
+      e.preventDefault();
+      this.deleteChoice(cid);
+    }
   }
 
   //check if the title is empty and change the placeholder class as necessary
@@ -132,6 +137,17 @@ export class WdMain extends React.Component
       this.titlePlaceholderRef.current.classList.remove("hidden");
       this.titleEmpty=true;
     }
+  }
+
+  getOutput()
+  {
+    var res=[this.titleRef.current.innerText];
+    for (var x in this.choiceRefs)
+    {
+      res.push(this.choiceRefs[x].getText());
+    }
+
+    console.log(res);
   }
 
   render()
@@ -206,6 +222,11 @@ class Choice extends React.Component
     }
 
     return false;
+  }
+
+  getText()
+  {
+    return this.maininput.current.innerText;
   }
 
   render()
