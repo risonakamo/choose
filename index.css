@@ -11,14 +11,32 @@ body {
   flex-direction: column;
   align-items: center;
 }
-.title {
-  min-width: 110px;
-  font-size: 28px;
+.title-outer {
+  position: relative;
+}
+.title-outer .title {
+  min-width: 246px;
   text-align: center;
   padding: 0 15px 0 15px;
+  font-size: 28px;
   border-left: 5px solid white;
   border-right: 5px solid white;
   outline: none;
+}
+.title-outer .title-placeholder {
+  min-width: 246px;
+  text-align: center;
+  padding: 0 15px 0 15px;
+  font-size: 28px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+.title-outer .title-placeholder.hidden {
+  opacity: 0;
 }
 .choice {
   font-size: 20px;

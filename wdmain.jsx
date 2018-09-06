@@ -9,12 +9,17 @@ export class WdMain extends React.Component
     this.addChoice=this.addChoice.bind(this);
     this.mainKeys=this.mainKeys.bind(this);
     this.deleteChoice=this.deleteChoice.bind(this);
+    this.checkTitleEmpty=this.checkTitleEmpty.bind(this);
 
     this.state={
       choices:[] //choice IDs in order
     };
 
     this.titleRef=React.createRef(); //the top most title block ref
+    this.titlePlaceholderRef=React.createRef(); //title place holder ref
+
+    this.titleEmpty=true; //if the title is empty. speed optimisation
+
     this.choicesId=0; //the last used choice id
     this.choiceRefs={}; //refs of choices with cid as key
   }
@@ -113,6 +118,22 @@ export class WdMain extends React.Component
     }
   }
 
+  //check if the title is empty and change the placeholder class as necessary
+  checkTitleEmpty()
+  {
+    if (this.titleRef.current.innerText.length>0 && this.titleEmpty)
+    {
+      this.titlePlaceholderRef.current.classList.add("hidden");
+      this.titleEmpty=false;
+    }
+
+    else if (this.titleRef.current.innerText.length==0 && !this.titleEmpty)
+    {
+      this.titlePlaceholderRef.current.classList.remove("hidden");
+      this.titleEmpty=true;
+    }
+  }
+
   render()
   {
     var enderShow="";
@@ -122,13 +143,19 @@ export class WdMain extends React.Component
     }
 
     return (<>
-      <div className="title"
-        contentEditable=""
-        onKeyDown={(e)=>{
-          this.mainKeys(e,0);
-        }}
-        ref={this.titleRef}
-      ></div>
+      <div className="title-outer">
+        <div className="title"
+          contentEditable=""
+          onKeyDown={(e)=>{
+            this.checkTitleEmpty();
+            this.mainKeys(e,0);
+          }}
+          onKeyUp={this.checkTitleEmpty}
+          ref={this.titleRef}
+        ></div>
+
+        <div className="title-placeholder" ref={this.titlePlaceholderRef}>well, what is it?</div>
+      </div>
 
       {this.state.choices.map((x,i)=>{
         return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}
