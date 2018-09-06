@@ -173,18 +173,20 @@ export class WdMain extends React.Component
         <div className="title-placeholder" ref={this.titlePlaceholderRef}>well, what is it?</div>
       </div>
 
-      {this.state.choices.map((x,i)=>{
-        return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}
-          ref={(ref)=>{
-            if (!this.choiceRefs[x] && ref)
-            {
-              this.choiceRefs[x]=ref;
-              ref.focus();
-            }
-          }}/>;
-      })}
+      <div className="choices">
+        {this.state.choices.map((x,i)=>{
+          return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}
+            ref={(ref)=>{
+              if (!this.choiceRefs[x] && ref)
+              {
+                this.choiceRefs[x]=ref;
+                ref.focus();
+              }
+            }}/>;
+        })}
 
-      <div className={`ender ${enderShow}`}><i>Ctrl+Enter to Choose</i></div>
+        <div className={`ender ${enderShow}`}><i>Ctrl+Enter to Choose</i></div>
+      </div>
     </>);
   }
 }
