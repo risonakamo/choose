@@ -13,6 +13,7 @@ export class WdMain extends React.Component
 
     this.state={
       choices:[] //choice IDs in order
+      //outputMode:false* if the system is in output mode
     };
 
     this.titleRef=React.createRef(); //the top most title block ref
@@ -75,6 +76,12 @@ export class WdMain extends React.Component
   //the choice textbox is empty.
   mainKeys(e,cid,isEmpty=false)
   {
+    //mainkey operations do not trigger in output mode
+    if (this.state.outputMode)
+    {
+      return;
+    }
+
     if (e.key=="Enter")
     {
       e.preventDefault();
@@ -126,6 +133,11 @@ export class WdMain extends React.Component
   //check if the title is empty and change the placeholder class as necessary
   checkTitleEmpty()
   {
+    if (this.state.outputMode)
+    {
+      return;
+    }
+
     if (this.titleRef.current.innerText.length>0 && this.titleEmpty)
     {
       this.titlePlaceholderRef.current.classList.add("hidden");
@@ -141,13 +153,18 @@ export class WdMain extends React.Component
 
   getOutput()
   {
-    var res=[this.titleRef.current.innerText];
+    this.setState({outputMode:1});
+
+    var res=`${this.titleRef.current.innerText}`;
+    var index=1;
     for (var x in this.choiceRefs)
     {
-      res.push(this.choiceRefs[x].getText());
+      res+=`<br>${index} ${this.choiceRefs[x].getText()}`;
+      index++;
     }
 
-    console.log(res);
+    this.titleRef.current.innerHTML=res;
+    this.titleRef.current.focus();
   }
 
   render()
@@ -158,9 +175,17 @@ export class WdMain extends React.Component
       enderShow="show";
     }
 
+    var hidechoices="";
+    var titleoutput="";
+    if (this.state.outputMode)
+    {
+      hidechoices="hidden";
+      titleoutput="output-mode";
+    }
+
     return (<>
       <div className="title-outer">
-        <div className="title"
+        <div className={`title ${titleoutput}`}
           contentEditable=""
           onKeyDown={(e)=>{
             this.checkTitleEmpty();
@@ -173,7 +198,7 @@ export class WdMain extends React.Component
         <div className="title-placeholder" ref={this.titlePlaceholderRef}>well, what is it?</div>
       </div>
 
-      <div className="choices">
+      <div className={`choices ${hidechoices}`}>
         {this.state.choices.map((x,i)=>{
           return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}
             ref={(ref)=>{
@@ -184,9 +209,9 @@ export class WdMain extends React.Component
               }
             }}/>;
         })}
-
-        <div className={`ender ${enderShow}`}><i>Ctrl+Enter to Choose</i></div>
       </div>
+
+      <div className={`ender ${enderShow}`}><i>Ctrl+Enter to Choose</i></div>
     </>);
   }
 }
