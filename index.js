@@ -44,6 +44,8 @@ export function isEndSelection()
     return false;
 }
 
+//performs callback with single arg, a randomised int between 1 and the
+//given amount, inclusive
 export function randomO(amount,callback)
 {
     var r=new XMLHttpRequest();

@@ -42,8 +42,18 @@ export class WdMain extends React.Component
       inc=0;
     }
 
-    //insert new id after the insertafter id
-    this.state.choices.splice(this.state.choices.indexOf(insertAfter)+inc,0,this.choicesId);
+    if (insertAfter>0)
+    {
+      //insert new id after the insertafter id if it isnt 0
+      this.state.choices.splice(this.state.choices.indexOf(insertAfter)+inc,0,this.choicesId);
+    }
+
+    else
+    {
+      //for cid less than 0 (the title)
+      this.state.choices.splice(0,0,this.choicesId);
+    }
+
 
     this.setState({choices:this.state.choices});
   }
@@ -151,6 +161,7 @@ export class WdMain extends React.Component
     }
   }
 
+  //enter output mode.
   getOutput()
   {
     this.setState({outputMode:1},()=>{
@@ -188,12 +199,16 @@ export class WdMain extends React.Component
       enderShow="show";
     }
 
+    var enderMessages=["Ctrl+Enter to Choose","Esc to Reset"];
+    var enderMessage=0;
+
     var hidechoices="";
     var titleoutput="";
     if (this.state.outputMode)
     {
       hidechoices="hidden";
       titleoutput="output-mode";
+      enderMessage=1;
     }
 
     return (<>
@@ -224,7 +239,7 @@ export class WdMain extends React.Component
         })}
       </div>
 
-      <div className={`ender ${enderShow}`}><i>Ctrl+Enter to Choose</i></div>
+      <div className={`ender ${enderShow}`}><i>{enderMessages[enderMessage]}</i></div>
     </>);
   }
 }
