@@ -153,18 +153,31 @@ export class WdMain extends React.Component
 
   getOutput()
   {
-    this.setState({outputMode:1});
+    this.setState({outputMode:1},()=>{
+      randomO(this.state.choices.length,(choiceInt)=>{
+        var res=`${this.titleRef.current.innerText}`;
+        var index=1;
+        var selectString;
+        for (var x in this.choiceRefs)
+        {
+          if (index==choiceInt)
+          {
+            selectString=">";
+          }
 
-    var res=`${this.titleRef.current.innerText}`;
-    var index=1;
-    for (var x in this.choiceRefs)
-    {
-      res+=`<br>${index} ${this.choiceRefs[x].getText()}`;
-      index++;
-    }
+          else
+          {
+            selectString="";
+          }
 
-    this.titleRef.current.innerHTML=res;
-    this.titleRef.current.focus();
+          res+=`<br>${selectString}${index} ${this.choiceRefs[x].getText()}`;
+          index++;
+        }
+
+        this.titleRef.current.innerHTML=res;
+        this.titleRef.current.focus();
+      });
+    });
   }
 
   render()
@@ -253,7 +266,7 @@ class Choice extends React.Component
 
   getText()
   {
-    return this.maininput.current.innerText;
+    return this.maininput.current.textContent;
   }
 
   render()
