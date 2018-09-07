@@ -25,6 +25,7 @@ p {
   border-left: 5px solid white;
   border-right: 5px solid white;
   outline: none;
+  overflow: hidden;
 }
 .title-outer .title.output-mode {
   font-size: 17px;

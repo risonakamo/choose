@@ -164,6 +164,8 @@ export class WdMain extends React.Component
   //enter output mode.
   getOutput()
   {
+    var initialHeight=this.titleRef.current.scrollHeight;
+    this.titleRef.current.style.height=`${initialHeight}px`;
     this.setState({outputMode:1},()=>{
       randomO(this.state.choices.length,(choiceInt)=>{
         var res=`${this.titleRef.current.innerText}`;
@@ -171,22 +173,28 @@ export class WdMain extends React.Component
         var selectString;
         for (var x in this.choiceRefs)
         {
-          if (index==choiceInt)
-          {
-            selectString=">";
-          }
-
-          else
-          {
-            selectString="";
-          }
+          selectString=(index==choiceInt)?">":"";
 
           res+=`<br>${selectString}${index} ${this.choiceRefs[x].getText()}`;
           index++;
         }
 
         this.titleRef.current.innerHTML=res;
+
+        this.titleRef.current.animate({
+          height:[`${initialHeight}px`,`${this.titleRef.current.scrollHeight}px`]
+        },{
+          duration:400,
+          easing:"cubic-bezier(0.215,0.61,0.355,1)",
+          fill:"forwards"
+        });
+
+        setTimeout(()=>{
+          this.titleRef.current.style.height="";
+        },400);
+
         this.titleRef.current.focus();
+        cursorEnd();
       });
     });
   }
