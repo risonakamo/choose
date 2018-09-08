@@ -197,11 +197,9 @@ export class WdMain extends React.Component
     var enderMessages=["Ctrl+Enter to Choose","Esc to Reset"];
     var enderMessage=0;
 
-    var hidechoices="";
     var titleoutput="";
     if (this.state.outputMode)
     {
-      hidechoices="hidden";
       titleoutput="output-mode";
       enderMessage=1;
     }
@@ -221,7 +219,7 @@ export class WdMain extends React.Component
         <div className="title-placeholder" ref={this.titlePlaceholderRef}>well, what is it?</div>
       </div>
 
-      <div className={`choices ${hidechoices}`}>
+      <div className="choices">
         {this.state.choices.map((x,i)=>{
           return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}
             ref={(ref)=>{
