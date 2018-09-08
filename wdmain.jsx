@@ -225,6 +225,7 @@ export class WdMain extends React.Component
     });
   }
 
+  //full reset of wd components
   reset()
   {
     this.choiceRefs={};

@@ -173,7 +173,8 @@ export class WdMain extends React.Component {
         this.titleRef.current.focus();
       });
     });
-  }
+  } //full reset of wd components
+
 
   reset() {
     this.choiceRefs = {};
