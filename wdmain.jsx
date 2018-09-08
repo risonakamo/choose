@@ -200,14 +200,13 @@ export class WdMain extends React.Component
     this.setState({outputMode:1},()=>{
       randomO(this.state.choices.length,(choiceInt)=>{
         var res=`${this.titleRef.current.innerText}`;
-        var index=1;
         var selectString;
-        for (var x in this.choiceRefs)
-        {
-          selectString=(index==choiceInt)?">":"";
 
-          res+=`<br>${selectString}${index} ${this.choiceRefs[x].getText()}`;
-          index++;
+        for (var x=0,l=this.state.choices.length;x<l;x++)
+        {
+          selectString=(x+1==choiceInt)?">":"";
+
+          res+=`<br>${selectString}${x+1} ${this.choiceRefs[this.state.choices[x]].getText()}`;
         }
 
         this.titleRef.current.innerHTML=res;
