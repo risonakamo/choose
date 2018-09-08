@@ -135,6 +135,7 @@ export class WdMain extends React.Component {
 
   getOutput() {
     var initialHeight = this.titleRef.current.scrollHeight;
+    this.titleRef.current.style.height = initialHeight + "px";
     this.setState({
       outputMode: 1
     }, () => {
@@ -150,6 +151,16 @@ export class WdMain extends React.Component {
         }
 
         this.titleRef.current.innerHTML = res;
+
+        anime({
+          targets: this.titleRef.current,
+          height: this.titleRef.current.scrollHeight,
+          duration: 300,
+          easing: "easeOutCubic"
+        }).complete = () => {
+          this.titleRef.current.style.height = "";
+        };
+
         this.titleRef.current.focus();
       });
     });
