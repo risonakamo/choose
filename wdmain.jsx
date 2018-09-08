@@ -189,6 +189,11 @@ export class WdMain extends React.Component
   //enter output mode.
   getOutput()
   {
+    if (this.state.choices.length<2)
+    {
+      return;
+    }
+
     var initialHeight=this.titleRef.current.scrollHeight;
     this.titleRef.current.style.height=initialHeight+"px";
 
