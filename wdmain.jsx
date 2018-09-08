@@ -42,6 +42,11 @@ export class WdMain extends React.Component
         easing:"easeOutQuad"
       });
     }
+
+    else
+    {
+      this.choiceHolderRef.current.style.height="";
+    }
   }
 
   //give it key to insert after
@@ -100,6 +105,12 @@ export class WdMain extends React.Component
   //the choice textbox is empty.
   mainKeys(e,cid,isEmpty=false)
   {
+    if (e.key=="Escape")
+    {
+      this.reset();
+      return;
+    }
+
     //mainkey operations do not trigger in output mode
     if (this.state.outputMode)
     {
@@ -208,6 +219,14 @@ export class WdMain extends React.Component
         this.titleRef.current.focus();
       });
     });
+  }
+
+  reset()
+  {
+    this.choiceRefs={};
+    this.titleRef.current.innerHTML="";
+    this.titleRef.current.focus();
+    this.setState({choices:[],outputMode:false});
   }
 
   render()
