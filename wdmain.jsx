@@ -165,7 +165,7 @@ export class WdMain extends React.Component
   getOutput()
   {
     var initialHeight=this.titleRef.current.scrollHeight;
-    this.titleRef.current.style.height=`${initialHeight}px`;
+
     this.setState({outputMode:1},()=>{
       randomO(this.state.choices.length,(choiceInt)=>{
         var res=`${this.titleRef.current.innerText}`;
@@ -181,20 +181,7 @@ export class WdMain extends React.Component
 
         this.titleRef.current.innerHTML=res;
 
-        this.titleRef.current.animate({
-          height:[`${initialHeight}px`,`${this.titleRef.current.scrollHeight}px`]
-        },{
-          duration:400,
-          easing:"cubic-bezier(0.215,0.61,0.355,1)",
-          fill:"forwards"
-        });
-
-        setTimeout(()=>{
-          this.titleRef.current.style.height="";
-        },400);
-
         this.titleRef.current.focus();
-        cursorEnd();
       });
     });
   }
