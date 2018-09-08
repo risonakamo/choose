@@ -27,9 +27,6 @@ p {
   outline: none;
   overflow: hidden;
 }
-.title-outer .title.output-mode {
-  font-size: 17px;
-}
 .title-outer .title-placeholder {
   min-width: 246px;
   text-align: center;
@@ -49,10 +46,7 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.choices.hidden {
-  visibility: hidden;
-  height: 0;
+  overflow: hidden;
 }
 .choice {
   font-size: 20px;

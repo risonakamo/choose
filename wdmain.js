@@ -1,1 +1,255 @@
-import{cursorEnd,isStartSelection,isEndSelection,randomO}from"./index.js";export class WdMain extends React.Component{constructor(a){super(a),this.addChoice=this.addChoice.bind(this),this.mainKeys=this.mainKeys.bind(this),this.deleteChoice=this.deleteChoice.bind(this),this.checkTitleEmpty=this.checkTitleEmpty.bind(this),this.state={choices:[]},this.titleRef=React.createRef(),this.titlePlaceholderRef=React.createRef(),this.titleEmpty=!0,this.choicesId=0,this.choiceRefs={}}componentDidMount(){this.titleRef.current.focus()}addChoice(a){var b=1;this.choicesId++,isStartSelection()&&(b=0),0<a?this.state.choices.splice(this.state.choices.indexOf(a)+b,0,this.choicesId):this.state.choices.splice(0,0,this.choicesId),this.setState({choices:this.state.choices})}deleteChoice(a){delete this.choiceRefs[a];var b=this.state.choices.indexOf(a);this.state.choices.splice(b,1),0==b?(this.titleRef.current.focus(),cursorEnd()):this.choiceRefs[this.state.choices[b-1]].focus(),this.setState({choices:this.state.choices})}mainKeys(a,b,c=!1){if(!this.state.outputMode)if("Enter"==a.key)a.preventDefault(),a.ctrlKey?this.getOutput():!c&&this.addChoice(b);else if("ArrowUp"!=a.key)"ArrowDown"==a.key?isEndSelection()&&this.choiceRefs[this.state.choices[this.state.choices.indexOf(b)+1]].focus():"Backspace"==a.key&&0==window.getSelection().anchorOffset&&0<b&&(a.preventDefault(),this.deleteChoice(b));else if(isStartSelection()){var d=this.state.choices.indexOf(b)-1;0>d?this.titleRef.current.focus():this.choiceRefs[this.state.choices[d]].focus()}}checkTitleEmpty(){this.state.outputMode||(0<this.titleRef.current.innerText.length&&this.titleEmpty?(this.titlePlaceholderRef.current.classList.add("hidden"),this.titleEmpty=!1):0==this.titleRef.current.innerText.length&&!this.titleEmpty&&(this.titlePlaceholderRef.current.classList.remove("hidden"),this.titleEmpty=!0))}getOutput(){this.titleRef.current.scrollHeight;this.setState({outputMode:1},()=>{randomO(this.state.choices.length,a=>{var b,c=`${this.titleRef.current.innerText}`,d=1;for(var e in this.choiceRefs)b=d==a?">":"",c+=`<br>${b}${d} ${this.choiceRefs[e].getText()}`,d++;this.titleRef.current.innerHTML=c,this.titleRef.current.focus()})})}render(){var a="";2<=this.state.choices.length&&(a="show");var b=0,c="";return this.state.outputMode&&(c="output-mode",b=1),React.createElement(React.Fragment,null,React.createElement("div",{className:"title-outer"},React.createElement("div",{className:`title ${c}`,contentEditable:"",onKeyDown:a=>{this.checkTitleEmpty(),this.mainKeys(a,0)},onKeyUp:this.checkTitleEmpty,ref:this.titleRef}),React.createElement("div",{className:"title-placeholder",ref:this.titlePlaceholderRef},"well, what is it?")),React.createElement("div",{className:"choices"},this.state.choices.map((a,b)=>React.createElement(Choice,{number:b+1,key:a,cid:a,mainKeys:this.mainKeys,addChoice:this.addChoice,ref:b=>{!this.choiceRefs[a]&&b&&(this.choiceRefs[a]=b,b.focus())}}))),React.createElement("div",{className:`ender ${a}`},React.createElement("i",null,["Ctrl+Enter to Choose","Esc to Reset"][b])))}}class Choice extends React.Component{constructor(a){super(a),this.focus=this.focus.bind(this),this.checkEmpty=this.checkEmpty.bind(this),this.maininput=React.createRef()}focus(){this.maininput.current.focus(),cursorEnd()}checkEmpty(){return!(""!=this.maininput.current.innerText)}getText(){return this.maininput.current.textContent}render(){return React.createElement("div",{className:"choice"},React.createElement("span",null,this.props.number),React.createElement("div",{className:"input",contentEditable:"",onKeyDown:a=>{this.props.mainKeys(a,this.props.cid,this.checkEmpty())},ref:this.maininput}))}}
+import { cursorEnd, isStartSelection, isEndSelection, randomO } from "./index.js"; //WhatDo main
+
+export class WdMain extends React.Component {
+  constructor(props) {
+    super(props);
+    this.addChoice = this.addChoice.bind(this);
+    this.mainKeys = this.mainKeys.bind(this);
+    this.deleteChoice = this.deleteChoice.bind(this);
+    this.checkTitleEmpty = this.checkTitleEmpty.bind(this);
+    this.state = {
+      choices: [] //choice IDs in order
+      //outputMode:false* if the system is in output mode
+
+    };
+    this.titleRef = React.createRef(); //the top most title block ref
+
+    this.titlePlaceholderRef = React.createRef(); //title place holder ref
+
+    this.choiceHolderRef = React.createRef();
+    this.titleEmpty = true; //if the title is empty. speed optimisation
+
+    this.choicesId = 0; //the last used choice id
+
+    this.choiceRefs = {}; //refs of choices with cid as key
+  }
+
+  componentDidMount() {
+    this.titleRef.current.focus();
+  }
+
+  componentDidUpdate() {
+    if (this.state.outputMode) {
+      anime({
+        targets: this.choiceHolderRef.current,
+        height: 0,
+        duration: 200,
+        easing: "easeOutQuad"
+      });
+    }
+  } //give it key to insert after
+
+
+  addChoice(insertAfter) {
+    var inc = 1;
+    this.choicesId++; //if at start of selection, new choice will be added before the insertAfter
+
+    if (isStartSelection()) {
+      inc = 0;
+    }
+
+    if (insertAfter > 0) {
+      //insert new id after the insertafter id if it isnt 0
+      this.state.choices.splice(this.state.choices.indexOf(insertAfter) + inc, 0, this.choicesId);
+    } else {
+      //for cid less than 0 (the title)
+      this.state.choices.splice(0, 0, this.choicesId);
+    }
+
+    this.setState({
+      choices: this.state.choices
+    });
+  } //delete the given choice ID
+
+
+  deleteChoice(cid) {
+    delete this.choiceRefs[cid];
+    var index = this.state.choices.indexOf(cid);
+    this.state.choices.splice(index, 1);
+
+    if (index != 0) {
+      this.choiceRefs[this.state.choices[index - 1]].focus();
+    } else {
+      this.titleRef.current.focus();
+      cursorEnd();
+    }
+
+    this.setState({
+      choices: this.state.choices
+    });
+  } //main key handler for choices and title bar.
+  //but also needs cid.
+  //give isEmpty as result of checkempty, whether or not
+  //the choice textbox is empty.
+
+
+  mainKeys(e, cid, isEmpty = false) {
+    //mainkey operations do not trigger in output mode
+    if (this.state.outputMode) {
+      return;
+    }
+
+    if (e.key == "Enter") {
+      e.preventDefault();
+
+      if (e.ctrlKey) {
+        this.getOutput();
+      } else if (!isEmpty) {
+        this.addChoice(cid);
+      }
+    } else if (e.key == "ArrowUp") {
+      if (isStartSelection()) {
+        var focusindex = this.state.choices.indexOf(cid) - 1;
+
+        if (focusindex < 0) {
+          this.titleRef.current.focus();
+        } else {
+          this.choiceRefs[this.state.choices[focusindex]].focus();
+        }
+      }
+    } else if (e.key == "ArrowDown") {
+      if (isEndSelection()) {
+        this.choiceRefs[this.state.choices[this.state.choices.indexOf(cid) + 1]].focus();
+      }
+    } else if (e.key == "Backspace" && window.getSelection().anchorOffset == 0 && cid > 0) {
+      e.preventDefault();
+      this.deleteChoice(cid);
+    }
+  } //check if the title is empty and change the placeholder class as necessary
+
+
+  checkTitleEmpty() {
+    if (this.state.outputMode) {
+      return;
+    }
+
+    if (this.titleRef.current.innerText.length > 0 && this.titleEmpty) {
+      this.titlePlaceholderRef.current.classList.add("hidden");
+      this.titleEmpty = false;
+    } else if (this.titleRef.current.innerText.length == 0 && !this.titleEmpty) {
+      this.titlePlaceholderRef.current.classList.remove("hidden");
+      this.titleEmpty = true;
+    }
+  } //enter output mode.
+
+
+  getOutput() {
+    var initialHeight = this.titleRef.current.scrollHeight;
+    this.setState({
+      outputMode: 1
+    }, () => {
+      randomO(this.state.choices.length, choiceInt => {
+        var res = `${this.titleRef.current.innerText}`;
+        var index = 1;
+        var selectString;
+
+        for (var x in this.choiceRefs) {
+          selectString = index == choiceInt ? ">" : "";
+          res += `<br>${selectString}${index} ${this.choiceRefs[x].getText()}`;
+          index++;
+        }
+
+        this.titleRef.current.innerHTML = res;
+        this.titleRef.current.focus();
+      });
+    });
+  }
+
+  render() {
+    var enderShow = "";
+
+    if (this.state.choices.length >= 2) {
+      enderShow = "show";
+    }
+
+    var enderMessages = ["Ctrl+Enter to Choose", "Esc to Reset"];
+    var enderMessage = 0;
+
+    if (this.state.outputMode) {
+      enderMessage = 1;
+    }
+
+    return React.createElement(React.Fragment, null, React.createElement("div", {
+      className: "title-outer"
+    }, React.createElement("div", {
+      className: "title",
+      contentEditable: "",
+      onKeyDown: e => {
+        this.checkTitleEmpty();
+        this.mainKeys(e, 0);
+      },
+      onKeyUp: this.checkTitleEmpty,
+      ref: this.titleRef
+    }), React.createElement("div", {
+      className: "title-placeholder",
+      ref: this.titlePlaceholderRef
+    }, "well, what is it?")), React.createElement("div", {
+      className: "choices",
+      ref: this.choiceHolderRef
+    }, this.state.choices.map((x, i) => {
+      return React.createElement(Choice, {
+        number: i + 1,
+        key: x,
+        cid: x,
+        mainKeys: this.mainKeys,
+        addChoice: this.addChoice,
+        ref: ref => {
+          if (!this.choiceRefs[x] && ref) {
+            this.choiceRefs[x] = ref;
+            ref.focus();
+          }
+        }
+      });
+    })), React.createElement("div", {
+      className: `ender ${enderShow}`
+    }, React.createElement("i", null, enderMessages[enderMessage])));
+  }
+
+} //choice(int number,int cid,function mainKeys,function addChoice)
+//number: the number of the choice that visually appears on the left side
+//cid: unique id of the choice. should be same as react-key
+//mainKeys: function from parent
+//addChoice: function from parent
+
+class Choice extends React.Component {
+  constructor(props) {
+    super(props);
+    this.focus = this.focus.bind(this);
+    this.checkEmpty = this.checkEmpty.bind(this);
+    this.maininput = React.createRef();
+  } //focus on the main input
+
+
+  focus() {
+    this.maininput.current.focus();
+    cursorEnd();
+  } //disallow creation of another choice if
+  //this choice is empty
+
+
+  checkEmpty() {
+    if (this.maininput.current.innerText == "") {
+      return true;
+    }
+
+    return false;
+  }
+
+  getText() {
+    return this.maininput.current.textContent;
+  }
+
+  render() {
+    return React.createElement("div", {
+      className: "choice"
+    }, React.createElement("span", null, this.props.number), React.createElement("div", {
+      className: "input",
+      contentEditable: "",
+      onKeyDown: e => {
+        this.props.mainKeys(e, this.props.cid, this.checkEmpty());
+      },
+      ref: this.maininput
+    }));
+  }
+
+}

@@ -18,6 +18,7 @@ export class WdMain extends React.Component
 
     this.titleRef=React.createRef(); //the top most title block ref
     this.titlePlaceholderRef=React.createRef(); //title place holder ref
+    this.choiceHolderRef=React.createRef();
 
     this.titleEmpty=true; //if the title is empty. speed optimisation
 
@@ -28,6 +29,19 @@ export class WdMain extends React.Component
   componentDidMount()
   {
     this.titleRef.current.focus();
+  }
+
+  componentDidUpdate()
+  {
+    if (this.state.outputMode)
+    {
+      anime({
+        targets:this.choiceHolderRef.current,
+        height:0,
+        duration:200,
+        easing:"easeOutQuad"
+      });
+    }
   }
 
   //give it key to insert after
@@ -197,16 +211,14 @@ export class WdMain extends React.Component
     var enderMessages=["Ctrl+Enter to Choose","Esc to Reset"];
     var enderMessage=0;
 
-    var titleoutput="";
     if (this.state.outputMode)
     {
-      titleoutput="output-mode";
       enderMessage=1;
     }
 
     return (<>
       <div className="title-outer">
-        <div className={`title ${titleoutput}`}
+        <div className="title"
           contentEditable=""
           onKeyDown={(e)=>{
             this.checkTitleEmpty();
@@ -219,7 +231,7 @@ export class WdMain extends React.Component
         <div className="title-placeholder" ref={this.titlePlaceholderRef}>well, what is it?</div>
       </div>
 
-      <div className="choices">
+      <div className="choices" ref={this.choiceHolderRef}>
         {this.state.choices.map((x,i)=>{
           return <Choice number={i+1} key={x} cid={x} mainKeys={this.mainKeys} addChoice={this.addChoice}
             ref={(ref)=>{

@@ -21,7 +21,7 @@ gulp.watch("*.less",()=>{
 
 gulp.watch("*.jsx",()=>{
     gulp.src("*.jsx",{base:"."}).pipe(plumber(plumberoptions))
-        .pipe(babel({presets:["@babel/preset-react","minify"]}))
+        .pipe(babel({presets:["@babel/preset-react"]}))
         .pipe(gulp.dest("."));
 
     console.log(`${lognumber} compiled jsx`);
