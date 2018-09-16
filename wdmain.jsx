@@ -170,6 +170,8 @@ export class WdMain extends React.Component
   {
     if (this.state.outputMode)
     {
+      this.titlePlaceholderRef.current.classList.add("hidden");
+      this.titleEmpty=false;
       return;
     }
 
@@ -200,16 +202,27 @@ export class WdMain extends React.Component
     this.setState({outputMode:1},()=>{
       randomO(this.state.choices.length,(choiceInt)=>{
         var res=`${this.titleRef.current.innerText}`;
-        var selectString;
+        var selectString; //string fragment
+        var brstring; //string fragment (whatever that means?????? calling it now,
+                      //im going to come back some time in the future and read this
+                      //and have no idea what it means)
 
         for (var x=0,l=this.state.choices.length;x<l;x++)
         {
           selectString=(x+1==choiceInt)?">":"";
 
-          res+=`<br>${selectString}${x+1} ${this.choiceRefs[this.state.choices[x]].getText()}`;
+          brstring="<br>";
+
+          if (x==0 && res.length==0)
+          {
+            brstring="";
+          }
+
+          res+=`${brstring}${selectString}${x+1} ${this.choiceRefs[this.state.choices[x]].getText()}`;
         }
 
         this.titleRef.current.innerHTML=res;
+        this.checkTitleEmpty();
 
         anime({
           targets:this.titleRef.current,
